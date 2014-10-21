@@ -1,5 +1,3 @@
-require 'newrelic_rpm'
-
 require 'stringio'
 
 require 'pp'
@@ -24,7 +22,7 @@ module Hopper
   end
 
   def self.env
-    @_env ||= ActiveSupport::StringInquirer.new(ENV["WARREN_ENV"] || ENV["RAILS_ENV"] || "development")
+    @_env ||= ActiveSupport::StringInquirer.new(ENV["HOPPER_ENV"] || ENV["RAILS_ENV"] || "development")
   end
 
   def self.env=(environment)
