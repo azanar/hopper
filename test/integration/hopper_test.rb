@@ -2,7 +2,7 @@ require File.expand_path('../test_helper', __FILE__)
 
 require 'bunny'
 
-require 'timeout'
+require 'thread'
 
 require 'hopper'
 
@@ -15,7 +15,7 @@ module Hopper
       channel = Hopper::Channel.new
 
       queue = Hopper::Queue.new("hopper-stresstest")
-    
+
       publisher = queue.publisher(channel)
       listener = queue.listener(channel)
 
@@ -26,36 +26,55 @@ module Hopper
       channel = Hopper::Channel.new
 
       queue = channel.queue("hopper-stresstest")
-    
+
       publisher = queue.publisher
       listener = queue.listener
-      
+
       run_queue(publisher, listener)
 
     end
 
+    QUEUE_LENGTH = 100
+
     def run_queue(publisher, listener)
-      messages = 10.times.map do |x|
-        Message.new("message#{x}")
+      message_strings = QUEUE_LENGTH.times.map do |x|
+        "message#{x}"
       end
-      
+
+      messages = message_strings.map do |s|
+        Message.new(s)
+      end
+
       messages.each do |m|
         publisher.publish(m)
       end
 
       received = []
 
-      Timeout::timeout(1) do
+      validate_mutex = Mutex.new
+      validate_latch = ConditionVariable.new
+
+      Thread.new do
         listener.listen do |m|
           received << m
           m.acknowledge
-          if received.length == 10
+          if received.length == QUEUE_LENGTH
+            validate_latch.signal
             m.terminate
           end
         end
       end
 
-      assert_equal 10, received.length
+      validate_mutex.synchronize {
+        validate_latch.wait(validate_mutex)
+      }
+
+      assert_equal QUEUE_LENGTH, received.length
+      received_strings = received.map {|r|
+        r.message.payload
+      }
+      assert_equal Set.new(message_strings), Set.new(received_strings)
     end
+
   end
 end
