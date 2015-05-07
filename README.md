@@ -45,3 +45,8 @@ A Listener:
   m.acknowledge
 end
 ```
+
+TODO
+====
+
+- Add support for pluggable serialization mechanisms (MsgPack, JSON, etc.)
