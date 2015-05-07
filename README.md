@@ -10,3 +10,38 @@
 Hopper
 ======
 A framework for task execution written around bunny.
+
+Examples
+========
+A Publisher:
+
+```ruby
+  channel = Hopper::Channel.new
+
+  queue = Hopper::Queue.new("hopper-stresstest")
+
+  publisher = queue.publisher(channel)
+  
+  publisher.publish(m)
+```
+
+A Listener:
+```ruby
+ channel = Hopper::Channel.new
+
+ queue = Hopper::Queue.new("hopper-stresstest")
+  
+ listener = queue.listener(channel)
+
+ listener.listen do |m|
+          
+  unless valid(m)
+    m.reject
+    next
+  end
+  
+  # do some stuff
+  
+  m.acknowledge
+end
+```
