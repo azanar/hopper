@@ -12,7 +12,7 @@ Hopper
 A framework for task execution written around bunny.
 
 Examples
-========
+--------
 A Publisher:
 
 ```ruby
@@ -47,6 +47,23 @@ end
 ```
 
 TODO
-====
+----
 
 - Add support for pluggable serialization mechanisms (MsgPack, JSON, etc.)
+
+API Documentation
+-----------------
+
+See [RubyDoc](http://rubydoc.info/github/azanar/hopper/index)
+
+Contributors
+------------
+
+See [Contributing](CONTRIBUTING.md) for details.
+
+License
+-------
+
+&copy;2015 Ed Carrel. Released under the MIT License.
+
+See [License](LICENSE) for details.
