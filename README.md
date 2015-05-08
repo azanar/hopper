@@ -11,6 +11,8 @@ Hopper
 ======
 A framework for task execution written around bunny.
 
+Usable on its own, or as part of [Hopper](https://github.com/azanar/hopper).
+
 Examples
 --------
 A Publisher:
